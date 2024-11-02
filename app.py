@@ -313,70 +313,70 @@ If you have any questions, please feel free to open an issue or directly reach u
 """
 
 
-# Gradio 
+# Gradio
 with gr.Blocks() as demo:
-    gr.Markdown("# OmniGen: Unified Image Generation [paper](https://arxiv.org/abs/2409.11340) [code](https://github.com/VectorSpaceLab/OmniGen)")
+    gr.Markdown("# OmniGen: Unified Image Generation [论文](https://arxiv.org/abs/2409.11340) [代码](https://github.com/VectorSpaceLab/OmniGen)")
     gr.Markdown(description)
     with gr.Row():
         with gr.Column():
-            # text prompt
+            # 文本提示
             prompt_input = gr.Textbox(
-                label="Enter your prompt, use <img><|image_i|></img> to represent i-th input image", placeholder="Type your prompt here..."
+                label="输入您的提示，使用 <img><|image_i|></img> 来表示第 i 个输入图像", placeholder="在这里输入您的提示..."
             )
 
             with gr.Row(equal_height=True):
-                # input images
+                # 输入图像
                 image_input_1 = gr.Image(label="<img><|image_1|></img>", type="filepath")
                 image_input_2 = gr.Image(label="<img><|image_2|></img>", type="filepath")
                 image_input_3 = gr.Image(label="<img><|image_3|></img>", type="filepath")
 
-            # slider
+            # 滑块
             height_input = gr.Slider(
-                label="Height", minimum=128, maximum=2048, value=1024, step=16
+                label="高度", minimum=128, maximum=2048, value=1024, step=16
             )
             width_input = gr.Slider(
-                label="Width", minimum=128, maximum=2048, value=1024, step=16
+                label="宽度", minimum=128, maximum=2048, value=1024, step=16
             )
 
             guidance_scale_input = gr.Slider(
-                label="Guidance Scale", minimum=1.0, maximum=5.0, value=2.5, step=0.1
+                label="指导尺度", minimum=1.0, maximum=5.0, value=2.5, step=0.1
             )
 
             img_guidance_scale_input = gr.Slider(
-                label="img_guidance_scale", minimum=1.0, maximum=2.0, value=1.6, step=0.1
+                label="图像指导尺度", minimum=1.0, maximum=2.0, value=1.6, step=0.1
             )
 
             num_inference_steps = gr.Slider(
-                label="Inference Steps", minimum=1, maximum=100, value=50, step=1
+                label="推理步骤数", minimum=1, maximum=100, value=50, step=1
             )
 
             seed_input = gr.Slider(
-                label="Seed", minimum=0, maximum=2147483647, value=42, step=1
+                label="种子", minimum=0, maximum=2147483647, value=42, step=1
             )
 
             max_input_image_size = gr.Slider(
-                label="max_input_image_size", minimum=128, maximum=2048, value=1024, step=16
+                label="最大输入图像尺寸", minimum=128, maximum=2048, value=1024, step=16
             )
 
             separate_cfg_infer = gr.Checkbox(
-                label="separate_cfg_infer", info="Whether to use separate inference process for different guidance. This will reduce the memory cost.", value=True,
+                label="分离 CFG 推理", info="是否为不同的指导使用单独的推理过程。这将减少内存消耗。", value=True,
             )
             offload_model = gr.Checkbox(
-                label="offload_model", info="Offload model to CPU, which will significantly reduce the memory cost but slow down the generation speed. You can cancle separate_cfg_infer and set offload_model=True. If both separate_cfg_infer and offload_model be True, further reduce the memory, but slowest generation", value=False,
+                label="卸载模型", info="将模型卸载到 CPU，这将显著减少内存消耗但会减慢生成速度。您可以取消分离 CFG 推理并设置卸载模型=True。如果分离 CFG 推理和卸载模型都为 True，将进一步减少内存，但生成速度最慢。", value=False,
             )
             use_input_image_size_as_output = gr.Checkbox(
-                label="use_input_image_size_as_output", info="Automatically adjust the output image size to be same as input image size. For editing and controlnet task, it can make sure the output image has the same size with input image leading to better performance", value=False,
+                label="将输入图像尺寸用作输出", info="自动将输出图像尺寸调整为与输入图像尺寸相同。对于编辑和 ControlNet 任务，它可以确保输出图像与输入图像尺寸相同，从而实现更好的性能。", value=False,
             )
 
-            # generate
-            generate_button = gr.Button("Generate Image")
-            
+            # 生成按钮
+            generate_button = gr.Button("生成图像")
+
 
         with gr.Column():
-            # output image
-            output_image = gr.Image(label="Output Image")
+            # 输出图像
+            output_image = gr.Image(label="输出图像")
 
-    # click
+    # 点击事件
     generate_button.click(
         generate_image,
         inputs=[
@@ -422,5 +422,9 @@ with gr.Blocks() as demo:
 
     gr.Markdown(article)
 
-# launch
-demo.launch()
+# 启动 Gradio 应用，启用分享功能
+demo.launch(
+    share=True,
+    server_name="0.0.0.0",  # 绑定到所有网络接口
+    server_port=7860,       # 选择一个端口（可选）
+)
